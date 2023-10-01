@@ -20,6 +20,7 @@ export default function Login() {
         router.push("/dashboard");
       }
     };
+
     return check();
   }, [session]);
   return (
