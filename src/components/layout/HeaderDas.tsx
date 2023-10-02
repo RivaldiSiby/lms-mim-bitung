@@ -24,7 +24,7 @@ export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
     });
   };
   return (
-    <header className="w-full h-[80px] justify-between flex items-center px-5 lg:bg-[#F9F9F9] bg-[#7E72F4]">
+    <header className="w-full h-[80px] justify-between flex items-center px-5 py-5 lg:bg-[#F9F9F9] bg-[#7E72F4]">
       <button
         onClick={() => setMenuShow(true)}
         className="lg:hidden block text-white bg-white bg-opacity-20 p-2.5 rounded-lg text-[20px]"
@@ -44,7 +44,6 @@ export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
           onClick={() => handlerLogout()}
           className="text-[20px] bg-white border-[rgba(0, 0, 0, 0.11)] h-[45px] flex items-center px-5 rounded-full shadow"
         >
-          .
           <MdLogout />
         </button>
       </section>

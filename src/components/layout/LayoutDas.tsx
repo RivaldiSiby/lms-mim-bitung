@@ -27,7 +27,8 @@ export default function LayoutDas({
       className="w-full h-[100vh] flex  font-[Montserrat]"
       style={{ background: lightColor }}
     >
-      <section className="w-[25%] h-full  p-5 hidden lg:flex">
+      <section className="w-[25%] hidden lg:flex"></section>
+      <section className="w-[25%] h-full fixed p-5 hidden lg:flex">
         <section
           style={{ background: primaryColor }}
           className="flex-1 rounded-xl"
@@ -36,7 +37,7 @@ export default function LayoutDas({
             LMS MIM BITUNG
           </h4>
           <section className="px-10">
-            <p className="text-white font-[12px] font-medium opacity-50 mb-5">
+            <p className="text-white text-[12px] font-medium opacity-50 mb-5">
               User Tools
             </p>
             <MenuList
@@ -88,11 +89,11 @@ export default function LayoutDas({
           style={{ background: primaryColor }}
           className="flex-1 flex flex-col"
         >
-          <h4 className="text-white font-bold text-center pt-5 pb-10 text-[20px]">
+          <h4 className="text-white font-bold text-center pt-5 pb-3 text-[18px]">
             LMS MIM BITUNG
           </h4>
           <section className="px-10">
-            <p className="text-white font-[12px] font-medium opacity-50 mb-5">
+            <p className="text-white md:text-[12px] text-[10px] font-medium opacity-50 mb-1">
               User Tools
             </p>
             <MenuList
@@ -135,7 +136,7 @@ export default function LayoutDas({
           <section className="flex items-center justify-center flex-1">
             <button
               onClick={() => setMenuShow(false)}
-              className="w-[100px] bg-white h-[50px] border flex items-center justify-center  text-[30px] rounded-full"
+              className="w-[70px] bg-white h-[40px] border flex items-center justify-center  text-[20px] rounded-full"
             >
               <FaAngleDoubleLeft />
             </button>
