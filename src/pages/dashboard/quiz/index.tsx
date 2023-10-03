@@ -52,48 +52,56 @@ export default function Quiz() {
             </p>
             <section className="pb-5">
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={3}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={2}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={1}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={3}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={2}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={1}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={3}
                 label="Ujian Bahasa Indo Quiz"
               />
               <ListQuiz
+                id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={2}

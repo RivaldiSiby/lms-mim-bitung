@@ -11,7 +11,7 @@ export default function BtnSection({
   return (
     <button
       onClick={() => (!handler ? "" : handler())}
-      className="lg:h-[53px] h-[50px] font-[Montserrat] font-semibold lg:w-[200px] w-[170px] rounded-full shadow cursor-pointer"
+      className="lg:h-[53px] sm:h-[50px] h-[45px] lg:text-[16px] sm:text-[14px] text-[12px] font-[Montserrat] font-semibold lg:w-[200px] w-[170px] rounded-full shadow cursor-pointer"
       style={{ background: secondaryColor, color: grayColor }}
     >
       {label}
