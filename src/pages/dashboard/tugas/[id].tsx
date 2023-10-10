@@ -3,14 +3,19 @@ import BtnSection from "@/components/form/BtnSection";
 import AuthComponent from "@/components/layout/AuthComponent";
 import HeaderDas from "@/components/layout/HeaderDas";
 import LayoutDas from "@/components/layout/LayoutDas";
-import { grayColor } from "@/helpers/color";
+import { grayColor, primaryColor } from "@/helpers/color";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import ListMateri from "./components/ListTugas";
+import DetailTugas from "./components/Detail";
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useRouter } from "next/router";
+import FootDetail from "./components/FootDetail";
 
-export default function Tugas() {
+export default function Detail() {
   const [menuShow, setMenuShow] = useState(false);
   const [screen, setScreen] = useState<any>(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (window) {
@@ -31,33 +36,35 @@ export default function Tugas() {
               >
                 Tugas
               </p>
-              {screen?.w > 768 ? (
-                <BtnSection
-                  handler={() => console.log("gabung")}
-                  label={"KODE TUGAS"}
-                />
-              ) : (
-                <BtnIcon
-                  handler={() => console.log("gabung")}
-                  label={<FaPlus />}
-                />
-              )}
+              <button
+                onClick={() => router.push("/dashboard/tugas")}
+                className="md:text-[30px] text-[25px] border p-2 px-5 rounded-full border-[#7E72F4] "
+                style={{ color: primaryColor }}
+              >
+                <MdKeyboardArrowLeft />
+              </button>
             </section>
             <section className="mt-5 flex-1">
-              <ListMateri
+              <DetailTugas
                 id="1"
                 data={{}}
                 date="4 Oktober 2023"
                 status={3}
                 label="Tugas Matematika"
               />
-              <ListMateri
-                id="1"
-                data={{}}
-                date="4 Oktober 2023"
-                status={1}
-                label="Tugas Bahas Indonesia"
-              />
+              <section className="w-full min-h-[70px] border flex items-center px-3 bg-white shadow mb-3">
+                <p
+                  className="sm:text-[14px] text-[14px]"
+                  style={{ color: grayColor }}
+                >
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum
+                  optio quae vitae quas corrupti fuga deserunt labore hic nemo,
+                  nam animi exercitationem harum accusantium excepturi inventore
+                  vel libero, commodi suscipit.
+                </p>
+              </section>
+              {/* foot */}
+              <FootDetail />
             </section>
           </section>
         </section>
@@ -66,4 +73,4 @@ export default function Tugas() {
   );
 }
 
-Tugas.requireAuth = true;
+Detail.requireAuth = true;
