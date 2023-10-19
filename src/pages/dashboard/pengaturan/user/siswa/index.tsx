@@ -2,11 +2,10 @@ import AuthComponent from "@/components/layout/AuthComponent";
 import HeaderDas from "@/components/layout/HeaderDas";
 import LayoutDas from "@/components/layout/LayoutDas";
 import React, { useState } from "react";
-import ListUser from "./components/ListTugas";
-import ItemInfo from "./components/ItemInfo";
-import { FaUserFriends } from "react-icons/fa";
+import { FaUser, FaUserGraduate } from "react-icons/fa";
+import TitleHead from "../../components/TitleHead";
 
-export default function Pengaturan() {
+export default function Siswa() {
   const [menuShow, setMenuShow] = useState(false);
   return (
     <AuthComponent>
@@ -15,19 +14,14 @@ export default function Pengaturan() {
         setMenuShow={setMenuShow}
         active="Pengaturan"
       >
-        <section className="w-full h-full ">
+        <section className="w-full h-full">
           <HeaderDas setMenuShow={setMenuShow} />
-          <section className="px-5 pt-5">
-            <ItemInfo
-              icon={<FaUserFriends />}
-              label="Manage User"
-              goto={"/dashboard/pengaturan/user"}
-            />
+          <section className="px-5">
+            <TitleHead backto={false} label="Siswa" />
+            test
           </section>
         </section>
       </LayoutDas>
     </AuthComponent>
   );
 }
-
-Pengaturan.requireAuth = true;
