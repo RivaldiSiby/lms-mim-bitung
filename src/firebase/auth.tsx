@@ -1,9 +1,14 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
 import { app } from "./config";
+
+const auth: any = getAuth(app);
 
 export const createUser = async (payload: any) => {
   try {
-    const auth = getAuth(app);
     const userRegis = await createUserWithEmailAndPassword(
       auth,
       payload.email,
@@ -11,6 +16,16 @@ export const createUser = async (payload: any) => {
     );
     return userRegis.user;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const updateProfileUser = async (payload: any) => {
+  try {
+    await updateProfile(auth.currentUser, payload);
+    return;
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 };
