@@ -24,6 +24,12 @@ export default function ListMateri({
         >
           {desc}
         </p>
+        <p
+          className="lg:text-[12px] text-[10px] flex"
+          style={{ color: primaryColor }}
+        >
+          {data.creator}
+        </p>
       </section>
     </section>
   );

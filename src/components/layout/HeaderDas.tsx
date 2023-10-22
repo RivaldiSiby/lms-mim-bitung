@@ -5,6 +5,7 @@ import React from "react";
 import { MdLogout } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { generateUserData } from "@/helpers/generateUserData";
 
 export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
   const handlerLogout = async () => {
@@ -33,12 +34,11 @@ export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
       </button>
       <section className="lg:block hidden">
         <p className="text-[14px]">Selamat Datang</p>
-        <h4 className="text-[20px] font-bold">Olivia Rahmi</h4>
+        <h4 className="text-[20px] font-bold"> {generateUserData().nama}</h4>
       </section>
       <section className="flex">
         <section className="text-[14px] bg-white border-[rgba(0, 0, 0, 0.11)] h-[45px] flex items-center px-10 rounded-full shadow mr-5">
-          {" "}
-          ADMIN
+          {generateUserData().role.toUpperCase()}
         </section>
         <button
           onClick={() => handlerLogout()}

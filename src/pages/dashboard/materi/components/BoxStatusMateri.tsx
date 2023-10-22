@@ -1,4 +1,6 @@
+import { downloadFileStorage } from "@/firebase/storage/storage";
 import { primaryColor } from "@/helpers/color";
+import { getBlob } from "firebase/storage";
 import Link from "next/link";
 import React from "react";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -7,7 +9,7 @@ export default function BoxStatusMateri({ link }: { link: string }) {
   return (
     <Link
       href={link}
-      download={link}
+      target="_blank"
       className="flex items-center py-3 justify-center sm:w-[150px]  text-white rounded-full"
       style={{ background: primaryColor }}
     >

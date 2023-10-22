@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import ItemInfo from "./components/ItemInfo";
 import { FaUserFriends } from "react-icons/fa";
 import { MdQuiz, MdMenuBook } from "react-icons/md";
+import InfoUserLayout from "@/components/layout/InfoUserLayout";
 
 export default function Dashboard() {
   const [menuShow, setMenuShow] = useState(false);
@@ -21,10 +22,7 @@ export default function Dashboard() {
         <section className="w-full h-full ">
           <HeaderDas setMenuShow={setMenuShow} />
           <section className="px-5">
-            <section className="lg:hidden block mt-5">
-              <p className="text-[14px]">Selamat Datang</p>
-              <h4 className="text-[20px] font-bold">Olivia Rahmi</h4>
-            </section>
+            <InfoUserLayout />
             <section
               style={{ background: primaryColor }}
               className="w-full h-[150px] border rounded-xl flex items-center mt-5 mb-10"

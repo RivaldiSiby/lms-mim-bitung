@@ -7,6 +7,7 @@ import { grayColor, primaryColor } from "@/helpers/color";
 import React, { useState } from "react";
 import { MdQuiz, MdKey } from "react-icons/md";
 import ListQuiz from "./components/ListQuiz";
+import InfoUserLayout from "@/components/layout/InfoUserLayout";
 
 export default function Quiz() {
   const [menuShow, setMenuShow] = useState(false);
@@ -17,10 +18,7 @@ export default function Quiz() {
         <section className="w-full h-full ">
           <HeaderDas setMenuShow={setMenuShow} />
           <section className="px-5 ">
-            <section className="lg:hidden block mt-5">
-              <p className="text-[14px]">Selamat Datang</p>
-              <h4 className="text-[20px] font-bold">Olivia Rahmi</h4>
-            </section>
+            <InfoUserLayout />
             <section
               style={{ background: primaryColor }}
               className="w-full flex-col lg:flex-row h-[150px] border rounded-xl flex lg:items-center justify-between mt-5 mb-10 lg:px-10 px-5"

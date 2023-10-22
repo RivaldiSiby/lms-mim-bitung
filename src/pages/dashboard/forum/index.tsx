@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import ChatWriter from "./components/ChatWriter";
 import ChatBox from "./components/ChatBox";
 import ChatSend from "./components/ChatSend";
+import InfoUserLayout from "@/components/layout/InfoUserLayout";
 
 export default function Forum() {
   const [menuShow, setMenuShow] = useState(false);
@@ -15,10 +16,7 @@ export default function Forum() {
         <section className="w-full h-full flex flex-col">
           <HeaderDas setMenuShow={setMenuShow} />
           <section className="px-5 flex-1 flex flex-col pb-5">
-            <section className="lg:hidden block mt-5">
-              <p className="text-[14px]">Selamat Datang</p>
-              <h4 className="text-[20px] font-bold">Olivia Rahmi</h4>
-            </section>
+            <InfoUserLayout />
             <section
               style={{ background: primaryColor }}
               className="w-full h-[150px] border rounded-xl flex items-center mt-5 mb-10"

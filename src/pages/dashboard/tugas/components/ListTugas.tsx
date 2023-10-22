@@ -30,7 +30,8 @@ export default function ListTugas({
           style={{ color: grayColor }}
         >
           Dikumpulkan{" "}
-          <span className="sm:flex flex-row hidden">paling lambat</span> {date}
+          <span className="sm:flex flex-row hidden px-2">paling lambat </span>{" "}
+          {date}
         </p>
       </section>
       <button

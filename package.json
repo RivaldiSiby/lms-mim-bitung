@@ -15,6 +15,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-icons": "^4.11.0",
+    "react-use-downloader": "^1.2.4",
     "sweetalert2": "^11.7.31"
   },
   "devDependencies": {

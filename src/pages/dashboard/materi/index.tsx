@@ -21,6 +21,8 @@ import { HandlerFileMateri } from "@/firebase/storage/storage";
 import { addMateri, materiCollection } from "@/firebase/firestore/materi";
 import LoadingTransparant from "@/components/layout/LoadingTransparant";
 import { limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "@/firebase/config";
 
 export default function Materi() {
   const [menuShow, setMenuShow] = useState(false);
@@ -50,13 +52,20 @@ export default function Materi() {
       // send img
       const url = await HandlerFileMateri(payload.file);
 
+      const user = getAuth(app).currentUser;
       const payloadData = {
         title: payload.title,
         desc: payload.desc,
         file: url,
+        creator: user?.email,
       };
       await addMateri(payloadData);
       setModalShow(false);
+      setPayload({
+        title: "",
+        desc: "",
+        file: "",
+      });
       setLoading(false);
       return;
     } catch (error: any) {
@@ -83,7 +92,7 @@ export default function Materi() {
         show={modalShow}
         close={() => setModalShow(false)}
         handler={() => submitUserHandler()}
-        title="Tambah Siswa"
+        title="Tambah Materi"
         component={
           <>
             <InputForm
