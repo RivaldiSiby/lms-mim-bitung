@@ -1,6 +1,6 @@
 import { primaryColor } from "@/helpers/color";
 import { confirmModal } from "@/helpers/modal";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React from "react";
 import { MdLogout } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { generateUserData } from "@/helpers/generateUserData";
 
 export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
+  const dataAuth: any = useSession();
   const handlerLogout = async () => {
     return Swal.fire({
       title: "Apakah anda Yakin ?",
@@ -34,11 +35,14 @@ export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
       </button>
       <section className="lg:block hidden">
         <p className="text-[14px]">Selamat Datang</p>
-        <h4 className="text-[20px] font-bold"> {generateUserData().nama}</h4>
+        <h4 className="text-[20px] font-bold">
+          {" "}
+          {dataAuth.data?.user?.name?.nama}
+        </h4>
       </section>
       <section className="flex">
         <section className="text-[14px] bg-white border-[rgba(0, 0, 0, 0.11)] h-[45px] flex items-center px-10 rounded-full shadow mr-5">
-          {generateUserData().role.toUpperCase()}
+          {dataAuth.data?.user?.name?.role.toUpperCase()}
         </section>
         <button
           onClick={() => handlerLogout()}

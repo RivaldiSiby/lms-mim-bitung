@@ -20,27 +20,37 @@ import LoadingTransparant from "@/components/layout/LoadingTransparant";
 import InputDate from "@/components/form/InputDate";
 import { getAuth } from "firebase/auth";
 import { app } from "@/firebase/config";
-import { addTugas, tugasCollection } from "@/firebase/firestore/tugas";
+import {
+  addTugas,
+  addTugasJoin,
+  getDataTugasByCode,
+  tugasCollection,
+  tugasJoinCollection,
+} from "@/firebase/firestore/tugas";
 import InputArea from "@/components/form/InputArea";
 import { limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import ListTugas from "./components/ListTugas";
 import { generateDateInfo, generateDateStatus } from "@/helpers/dateCheck";
+import generateUserData from "@/helpers/generateUserData";
+import { useSession } from "next-auth/react";
 
 export default function Tugas() {
   const [menuShow, setMenuShow] = useState(false);
   const [screen, setScreen] = useState<any>(false);
   const [modalShow, setModalShow] = useState(false);
+  const [modalKode, setModalKode] = useState(false);
   const [payload, setPayload] = useState<any>({
     title: "",
     desc: "",
     kode: "",
     date: "",
   });
+  const [payloadKode, setPayloadKode] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-
-  const user = getAuth(app).currentUser;
+  const [user, setUser] = useState<any>(false);
+  const dataAuth: any = useSession();
 
   useEffect(() => {
     if (window) {
@@ -60,7 +70,7 @@ export default function Tugas() {
       )
         return setErrMsg("Ada Inputan yang belum di isi");
 
-      const user = getAuth(app).currentUser;
+      const user: any = await generateUserData();
       const payloadData = {
         title: payload.title,
         desc: payload.desc,
@@ -85,23 +95,70 @@ export default function Tugas() {
     }
   };
 
+  const submitJoinTugas = async () => {
+    try {
+      setErrMsg("");
+      setLoading(true);
+      const res: any = await getDataTugasByCode(payloadKode);
+      if (!res) {
+        setLoading(false);
+        return setErrMsg("Tugas tidak ditemukan");
+      }
+
+      // join class
+      const payloadData = {
+        tugas_payload: res,
+        user: dataAuth?.data?.user,
+        user_created: user?.id,
+        tugas_file: "",
+        tugas_created_at: "",
+        tugas_id: res.id,
+      };
+
+      await addTugasJoin(payloadData);
+      setPayloadKode("");
+      setModalKode(false);
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      setLoading(false);
+      return setErrMsg(error.message);
+    }
+  };
+
   useEffect(() => {
-    const q = query(
+    generateUserData()
+      .then((res: any) => {
+        setUser(res);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    const qPengajar = query(
       tugasCollection,
       where("creator", "==", !user?.email ? "" : user?.email),
       limit(50)
     );
-    const snapshot = onSnapshot(q, (res) => {
-      const wrapdata: any = [];
-      res.docs.forEach((doc: any) => {
-        wrapdata.push({ ...doc.data(), id: doc.id });
-      });
-      setData(wrapdata);
-    });
+    const qSiswa = query(
+      tugasJoinCollection,
+      where("user_created", "==", !user?.id ? "" : user?.id),
+      limit(50)
+    );
+    const snapshot = onSnapshot(
+      user?.role === "siswa" ? qSiswa : qPengajar,
+      (res) => {
+        const wrapdata: any = [];
+        res.docs.forEach((doc: any) => {
+          wrapdata.push({ ...doc.data(), id: doc.id });
+        });
+        setData(wrapdata);
+      }
+    );
     return () => snapshot();
   }, [user]);
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <AuthComponent>
@@ -147,6 +204,27 @@ export default function Tugas() {
           </>
         }
       />
+      <ModalWrap
+        show={modalKode}
+        close={() => setModalKode(false)}
+        handler={() => submitJoinTugas()}
+        title="Tambah Tugas"
+        component={
+          <>
+            <InputForm
+              isPassword={false}
+              placeholder="Masukan Kode Untuk Join Tugas"
+              val={payloadKode}
+              setVal={(v: string) => setPayloadKode(v)}
+              icon={<AiOutlineEdit />}
+            />
+
+            <p className="text-[12px] text-red-500 font-[Montserrat]">
+              {errMsg}
+            </p>
+          </>
+        }
+      />
       {loading ? <LoadingTransparant /> : ""}
       <LayoutDas menuShow={menuShow} setMenuShow={setMenuShow} active="Tugas">
         <section className="w-full h-full ">
@@ -160,34 +238,63 @@ export default function Tugas() {
                 Tugas
               </p>
               <section className="items-center flex">
-                {screen?.w > 768 ? (
-                  <BtnSection
-                    handler={() => console.log("gabung")}
-                    label={"KODE TUGAS"}
-                  />
+                {dataAuth?.data?.user?.name?.role === "siswa" ? (
+                  <>
+                    {screen?.w > 768 ? (
+                      <BtnSection
+                        handler={() => setModalKode(true)}
+                        label={"KODE TUGAS"}
+                      />
+                    ) : (
+                      <BtnIcon
+                        handler={() => setModalKode(true)}
+                        label={<FaPlus />}
+                      />
+                    )}
+                  </>
                 ) : (
-                  <BtnIcon
-                    handler={() => console.log("gabung")}
-                    label={<FaPlus />}
-                  />
+                  ""
                 )}
-                <BtnIcon
-                  handler={() => setModalShow(true)}
-                  label={<AiOutlinePlus />}
-                />
+                {dataAuth?.data?.user?.name?.role === "pengajar" ? (
+                  <>
+                    <BtnIcon
+                      handler={() => setModalShow(true)}
+                      label={<AiOutlinePlus />}
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
               </section>
             </section>
             <section className="mt-5 flex-1">
-              {data.map((v: any) => (
-                <ListTugas
-                  key={v.id}
-                  id={v.id}
-                  data={v}
-                  date={generateDateInfo(v.date)}
-                  status={generateDateStatus(v.date)}
-                  label={v.title}
-                />
-              ))}
+              {dataAuth?.data?.user?.name?.role === "siswa" ? (
+                <>
+                  {data.map((v: any) => (
+                    <ListTugas
+                      key={v.id}
+                      id={v.tugas_payload.id}
+                      data={v.tugas_payload}
+                      date={generateDateInfo(v.tugas_payload.date)}
+                      status={generateDateStatus(v.tugas_payload.date)}
+                      label={v.tugas_payload.title}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {data.map((v: any) => (
+                    <ListTugas
+                      key={v.id}
+                      id={v.id}
+                      data={v}
+                      date={generateDateInfo(v.date)}
+                      status={generateDateStatus(v.date)}
+                      label={v.title}
+                    />
+                  ))}
+                </>
+              )}
             </section>
           </section>
         </section>

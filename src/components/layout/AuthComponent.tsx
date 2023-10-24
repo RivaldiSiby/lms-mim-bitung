@@ -21,21 +21,5 @@ export default function AuthComponent({ children }: any) {
     return <Loading />;
   }
 
-  const user = getAuth(app).currentUser;
-  if (user) {
-    if (!user.displayName) {
-      getUserData(user.uid)
-        .then((res) => {
-          // update display name
-          const payload = {
-            displayName: JSON.stringify(res),
-          };
-          updateProfileUser(payload)
-            .then((res) => console.log("success"))
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    }
-  }
   return children;
 }

@@ -1,19 +1,8 @@
-import { app } from "@/firebase/config";
-import { getAuth } from "firebase/auth";
+import { getSession, useSession } from "next-auth/react";
+import React from "react";
 
-export const generateUserData = () => {
-  const user: any = getAuth(app).currentUser;
-  if (user) {
-    const datauser = JSON.parse(user?.displayName);
-    console.log(datauser);
-    return datauser;
-  }
-  return {
-    created_at: "",
-    email: "",
-    id: "",
-    nama: "",
-    role: "",
-    updated_at: "",
-  };
-};
+export default async function generateUserData() {
+  const session = await getSession();
+  console.log("get session", session);
+  return session?.user?.name;
+}

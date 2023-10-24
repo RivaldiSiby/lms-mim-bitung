@@ -25,9 +25,9 @@ export const addUser = async (payload: any) => {
   }
 };
 
-export const getUserData = async (userId: string) => {
+export const getUserData = async (email: string) => {
   try {
-    const q = query(userCollection, where("id", "==", userId));
+    const q = query(userCollection, where("email", "==", email));
     const result = await getDocs(q);
     let data;
     result.docs.forEach((doc: any) => {

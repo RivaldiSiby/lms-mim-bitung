@@ -1,4 +1,5 @@
 import { auth } from "@/firebase/config";
+import { getUserData } from "@/firebase/firestore/user";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -11,20 +12,26 @@ export const authOptions: any = {
       name: "Credentials",
       credentials: {},
       async authorize(credentials: any): Promise<any> {
-        return signInWithEmailAndPassword(
-          auth,
-          credentials.email,
-          credentials.password
-        )
-          .then((userCredential) => {
-            if (userCredential.user) return userCredential.user;
-            console.log("err auth");
-            return null;
-          })
-          .catch((err) => {
-            console.log(err);
-            return null;
-          });
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            credentials.email,
+            credentials.password
+          );
+
+          if (userCredential.user) {
+            const user: any = userCredential.user;
+            const res = await getUserData(user.email);
+            const dataUser = {
+              email: user.email,
+              name: res,
+            };
+            return dataUser;
+          }
+          return null;
+        } catch (error) {
+          return null;
+        }
       },
     }),
   ],

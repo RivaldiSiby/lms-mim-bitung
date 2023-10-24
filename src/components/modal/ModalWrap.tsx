@@ -21,7 +21,7 @@ export default function ModalWrap({
       style={{ display: !show ? "none" : "flex" }}
       className="absolute font-[Montserrat] z-40 bg-black bg-opacity-50 w-full h-full items-center justify-center"
     >
-      <section className="bg-white lg:w-[700px] sm:w-[80%] w-[90%] min-h-[400px] p-5 flex items-center ">
+      <section className="bg-white lg:w-[700px] sm:w-[80%] w-[90%]  p-5 flex items-center ">
         <section className="w-full">
           <section className="flex w-full justify-between mb-5">
             <h5

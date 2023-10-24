@@ -1,13 +1,22 @@
-import { primaryColor } from "@/helpers/color";
+import { grayColor, primaryColor } from "@/helpers/color";
+import { generateNameFile } from "@/helpers/generateNameFile";
 import React from "react";
 import { AiFillCheckCircle, AiOutlineCloudUpload } from "react-icons/ai";
 
-export default function FootDetail() {
+export default function FootDetail({
+  data,
+  setFile,
+  file,
+}: {
+  data: any;
+  setFile: Function;
+  file: any;
+}) {
   return (
     <section className="flex sm:flex-row flex-col">
       <section className="sm:w-[40%] w-full mr-5 min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3">
         <h5 className="lg:text-[50px] text-[30px] text-gray-500 text-opacity-30 font-bold">
-          Z3SFAA12
+          {data.code}
         </h5>
         <p className="lg:text-[14px] text-[12px]">Kode Tugas</p>
       </section>
@@ -33,15 +42,26 @@ export default function FootDetail() {
           </section>
         </section>
         <section className="flex-1 h-full py-3 w-full ">
-          <button
+          <label
+            htmlFor="filedata"
             className="sm:h-full h-[60px] w-full rounded-xl flex items-center justify-center text-white lg:text-[16px] text-[14px]"
-            style={{ background: primaryColor }}
+            style={{
+              background: data?.tugas_file === "" ? primaryColor : grayColor,
+            }}
           >
             <span className="text-[30px] pr-5" style={{ color: "white" }}>
               <AiOutlineCloudUpload />
             </span>
-            UPLOAD TUGAS
-          </button>
+            {!file ? "UPLOAD TUGAS" : generateNameFile(file.name)}
+          </label>
+          <input
+            disabled={data?.tugas_file === "" ? false : true}
+            onChange={(e: any) => setFile(e.target.files[0])}
+            type="file"
+            name=""
+            className="hidden"
+            id="filedata"
+          />
         </section>
       </section>
     </section>

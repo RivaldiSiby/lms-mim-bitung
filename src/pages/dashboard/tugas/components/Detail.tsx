@@ -26,8 +26,9 @@ export default function DetailTugas({
           className="lg:text-[12px] text-[10px] flex"
           style={{ color: grayColor }}
         >
-          Dikumpulkan{" "}
-          <span className="sm:flex flex-row hidden">paling lambat</span> {date}
+          Dikumpulkan
+          <span className="sm:flex flex-row hidden mx-2">paling lambat </span>
+          {date}
         </p>
       </section>
     </section>
