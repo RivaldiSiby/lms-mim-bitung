@@ -16,11 +16,13 @@ import {
   getTugas,
   getTugasJoin,
   postFileTugas,
+  tugasJoinCollection,
 } from "@/firebase/firestore/tugas";
 import NotFound from "@/components/layout/NotFound";
 import { generateDateInfo, generateDateStatus } from "@/helpers/dateCheck";
 import { useSession } from "next-auth/react";
 import { HandlerFileTugas } from "@/firebase/storage/storage";
+import { limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 export default function Detail() {
   const [menuShow, setMenuShow] = useState(false);
@@ -40,9 +42,11 @@ export default function Detail() {
   useEffect(() => {
     (async () => {
       if (router.query?.id && session?.data?.user?.name?.role) {
-        console.log(session.data?.user?.name);
         if (session?.data?.user?.name?.role === "siswa") {
-          const res = await getTugasJoin(router.query?.id);
+          const res = await getTugasJoin(
+            router.query?.id,
+            session?.data?.user?.name?.id
+          );
           if (res === null) setData(null);
           return setData(res);
         } else {
@@ -54,6 +58,8 @@ export default function Detail() {
     })();
   }, [router.query, session]);
 
+  console.log(data);
+
   const submitFileTugas = async () => {
     try {
       if (file === "") return;
@@ -64,7 +70,10 @@ export default function Detail() {
       const payload = { ...data, tugas_file: url };
       await postFileTugas(data.id, payload);
       // update data
-      const res = await getTugasJoin(router.query?.id);
+      const res = await getTugasJoin(
+        router.query?.id,
+        session?.data?.user?.name?.id
+      );
       // if (res === null) setData(null);
       setData(res);
 
@@ -76,7 +85,7 @@ export default function Detail() {
     }
   };
 
-  console.log(data);
+  const [dataPengajar, setDataPengajar] = useState([]);
 
   return (
     <AuthComponent>
@@ -140,8 +149,12 @@ export default function Detail() {
                 </section>
                 {/* foot */}
                 <FootDetail
+                  id={router.query?.id}
                   setFile={setFile}
                   file={file}
+                  dataPayload={
+                    session?.data?.user?.name?.role === "siswa" ? data : false
+                  }
                   data={
                     session?.data?.user?.name?.role === "siswa"
                       ? data?.tugas_payload

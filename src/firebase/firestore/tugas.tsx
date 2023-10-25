@@ -57,9 +57,13 @@ export const getDataTugasByCode = async (code: string) => {
   }
 };
 
-export const getTugasJoin = async (id: string) => {
+export const getTugasJoin = async (id: string, userId: string) => {
   try {
-    const q = query(tugasJoinCollection, where("tugas_id", "==", id));
+    const q = query(
+      tugasJoinCollection,
+      where("user_created", "==", userId),
+      where("tugas_id", "==", id)
+    );
     const result = await getDocs(q);
     if (result.docs.length === 0) return false;
     let data;
