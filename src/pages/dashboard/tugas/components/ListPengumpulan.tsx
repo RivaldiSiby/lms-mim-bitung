@@ -39,7 +39,7 @@ export default function ListPengumpulan({
         </section>
       ) : (
         <Link
-          href={data?.tugas_file}
+          href={data?.tugas_file ?? ""}
           target="_blank"
           className="w-[150px] flex h-[50px]  items-center justify-center rounded-full"
           style={{ background: status === 1 ? grayColor : primaryColor }}

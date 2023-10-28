@@ -14,7 +14,7 @@ export default function ItemInfo({
 }) {
   return (
     <Link
-      href={goto}
+      href={goto ?? ""}
       style={{ background: primaryColor }}
       className="sm:w-[31.5%] w-full shadow-sm h-[150px] border rounded-xl flex justify-between items-center  p-5 mb-5"
     >

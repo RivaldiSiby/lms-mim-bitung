@@ -139,7 +139,7 @@ export default function Pengajar() {
               <section>
                 {data.length > 0
                   ? data.map((item: any) => (
-                      <ListUser key={item.id} data={item} />
+                      <ListUser key={item?.id} data={item} />
                     ))
                   : ""}
               </section>

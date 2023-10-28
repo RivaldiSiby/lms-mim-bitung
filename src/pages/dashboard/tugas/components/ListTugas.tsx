@@ -19,7 +19,7 @@ export default function ListTugas({
 }) {
   return (
     <Link
-      href={`/dashboard/tugas/${id}`}
+      href={`/dashboard/tugas/${id}` ?? ""}
       className="w-full h-[70px] border flex items-center px-3 bg-white shadow mb-3"
     >
       <BoxStatus status={status} />

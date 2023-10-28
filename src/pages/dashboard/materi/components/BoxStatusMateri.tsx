@@ -8,7 +8,7 @@ import { MdOutlineFileDownload } from "react-icons/md";
 export default function BoxStatusMateri({ link }: { link: string | any }) {
   return (
     <Link
-      href={link}
+      href={link ?? ""}
       target="_blank"
       className="flex items-center py-3 justify-center sm:w-[150px]  text-white rounded-full"
       style={{ background: primaryColor }}

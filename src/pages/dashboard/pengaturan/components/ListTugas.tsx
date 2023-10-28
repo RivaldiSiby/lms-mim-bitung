@@ -17,7 +17,7 @@ export default function ListUser({
 }) {
   return (
     <Link
-      href={goto}
+      href={goto ?? ""}
       className="w-full h-[70px] border flex items-center px-3 bg-white shadow mb-3"
     >
       <section
