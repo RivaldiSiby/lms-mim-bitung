@@ -41,13 +41,12 @@ export default function FootDetail({
     return () => snapshot();
   }, []);
 
-  console.log(data);
   return (
     <>
       <section className="flex sm:flex-row flex-col">
         <section className="sm:w-[40%] w-full mr-5 min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3">
           <h5 className="lg:text-[50px] text-[30px] text-gray-500 text-opacity-30 font-bold">
-            {data.code}
+            {data?.code}
           </h5>
           <p className="lg:text-[14px] text-[12px]">Kode Tugas</p>
         </section>
@@ -89,7 +88,7 @@ export default function FootDetail({
                   ? "Sudah dikumpulan"
                   : !file
                   ? "UPLOAD TUGAS"
-                  : generateNameFile(file.name)}
+                  : generateNameFile(file?.name)}
               </label>
               <input
                 disabled={data?.tugas_file === "" ? false : true}
@@ -107,7 +106,7 @@ export default function FootDetail({
               className=" font-bold w-full text-center text-[30px] opacity-50"
               style={{ color: grayColor }}
             >
-              {dataPengajar.length} Siswa Join
+              {dataPengajar?.length} Siswa Join
             </h5>
           </section>
         )}

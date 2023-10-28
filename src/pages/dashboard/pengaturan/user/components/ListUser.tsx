@@ -16,10 +16,10 @@ export default function ListUser({ data }: { data: any }) {
           className="lg:text-[16px] text-[14px] font-bold"
           style={{ color: darkPrimaryColor }}
         >
-          {data.nama}
+          {data?.nama}
         </p>
         <p style={{ color: grayColor }} className="lg:text-[14px] text-[12px] ">
-          {data.email}
+          {data?.email}
         </p>
       </section>
     </section>
