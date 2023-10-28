@@ -14,10 +14,10 @@ import { formatDuration } from "@/helpers/generateTime";
 
 export default function Forum() {
   const [menuShow, setMenuShow] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const dataAuth: any = useSession();
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef: any = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

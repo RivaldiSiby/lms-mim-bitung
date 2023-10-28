@@ -16,7 +16,7 @@ import { userCollection } from "@/firebase/firestore/user";
 
 export default function Dashboard() {
   const [menuShow, setMenuShow] = useState(false);
-  const [dataChat, setDataChat] = useState([]);
+  const [dataChat, setDataChat] = useState<any>([]);
   const [dataMateri, setDataMateri] = useState([]);
   const [dataUser, setDataUser] = useState([]);
   useEffect(() => {
