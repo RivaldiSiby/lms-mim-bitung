@@ -15,7 +15,7 @@ export default function ListPengumpulan({
   status: any;
 }) {
   return (
-    <section className="flex-1 border flex sm:flex-row flex-col-reverse items-center px-2 bg-white shadow mb-3 py-2 rounded-[20px]">
+    <section className="flex-1 border flex flex-row items-center px-2 bg-white shadow mb-3 py-2 rounded-[20px]">
       <section
         className="w-[50px] flex h-[50px] items-center justify-center rounded-full bg-opacity-70"
         style={{
@@ -29,25 +29,25 @@ export default function ListPengumpulan({
       <p className="flex-1 ml-5">{data?.user?.name?.nama}</p>
       {status === 1 ? (
         <section
-          className="w-[150px] flex h-[50px]  items-center justify-center rounded-full"
+          className="lg:w-[150px] px-3 flex h-[50px]  items-center justify-center rounded-full"
           style={{ background: status === 1 ? grayColor : primaryColor }}
         >
           <span className="text-[25px] text-white">
             <MdFileDownload />
           </span>
-          <p className="text-white ml-2">Download</p>
+          <p className="text-white ml-2 sm:block hidden">Download</p>
         </section>
       ) : (
         <Link
           href={data?.tugas_file ?? ""}
           target="_blank"
-          className="w-[150px] flex h-[50px]  items-center justify-center rounded-full"
+          className="lg:w-[150px] px-3 flex h-[50px]  items-center justify-center rounded-full"
           style={{ background: status === 1 ? grayColor : primaryColor }}
         >
           <span className="text-[25px] text-white">
             <MdFileDownload />
           </span>
-          <p className="text-white ml-2">Download</p>
+          <p className="text-white ml-2 sm:block hidden">Download</p>
         </Link>
       )}
     </section>
