@@ -5,7 +5,6 @@ import React from "react";
 import { MdLogout } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { generateUserData } from "@/helpers/generateUserData";
 
 export default function HeaderDas({ setMenuShow }: { setMenuShow: Function }) {
   const dataAuth: any = useSession();
