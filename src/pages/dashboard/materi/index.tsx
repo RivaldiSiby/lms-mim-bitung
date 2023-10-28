@@ -147,10 +147,10 @@ export default function Materi() {
             <section className="mt-5 flex-1 pb-5">
               {data.map((item: any) => (
                 <ListMateri
-                  key={item.id}
+                  key={item?.id}
                   data={item}
-                  desc={item.desc}
-                  label={item.title}
+                  desc={item?.desc}
+                  label={item?.title}
                 />
               ))}
             </section>

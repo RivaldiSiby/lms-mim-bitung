@@ -6,7 +6,7 @@ import {
   MdAutorenew,
 } from "react-icons/md";
 
-export default function BoxStatus({ status }: { status: number }) {
+export default function BoxStatus({ status }: { status: any }) {
   return (
     <section
       className="flex items-center p-3 sm:w-[150px]  text-white rounded-full"

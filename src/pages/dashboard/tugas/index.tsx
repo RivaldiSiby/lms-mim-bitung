@@ -172,7 +172,7 @@ export default function Tugas() {
             <InputForm
               isPassword={false}
               placeholder="Masukan Judul Tugas"
-              val={payload.title}
+              val={payload?.title}
               setVal={(v: string) => setPayload({ ...payload, title: v })}
               icon={<AiOutlineEdit />}
             />
@@ -272,12 +272,12 @@ export default function Tugas() {
                 <>
                   {data.map((v: any) => (
                     <ListTugas
-                      key={v.id}
-                      id={v.tugas_payload.id}
-                      data={v.tugas_payload}
-                      date={generateDateInfo(v.tugas_payload.date)}
-                      status={generateDateStatus(v.tugas_payload.date)}
-                      label={v.tugas_payload.title}
+                      key={v?.id}
+                      id={v?.tugas_payload.id}
+                      data={v?.tugas_payload}
+                      date={generateDateInfo(v?.tugas_payload.date)}
+                      status={generateDateStatus(v?.tugas_payload.date)}
+                      label={v?.tugas_payload.title}
                     />
                   ))}
                 </>
@@ -285,12 +285,12 @@ export default function Tugas() {
                 <>
                   {data.map((v: any) => (
                     <ListTugas
-                      key={v.id}
-                      id={v.id}
+                      key={v?.id}
+                      id={v?.id}
                       data={v}
-                      date={generateDateInfo(v.date)}
-                      status={generateDateStatus(v.date)}
-                      label={v.title}
+                      date={generateDateInfo(v?.date)}
+                      status={generateDateStatus(v?.date)}
+                      label={v?.title}
                     />
                   ))}
                 </>
