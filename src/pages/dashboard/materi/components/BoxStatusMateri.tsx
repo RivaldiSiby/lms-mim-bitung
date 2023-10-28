@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { MdOutlineFileDownload } from "react-icons/md";
 
-export default function BoxStatusMateri({ link }: { link: string }) {
+export default function BoxStatusMateri({ link }: { link: string | any }) {
   return (
     <Link
       href={link}

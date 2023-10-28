@@ -270,29 +270,33 @@ export default function Tugas() {
             <section className="mt-5 flex-1">
               {dataAuth?.data?.user?.name?.role === "siswa" ? (
                 <>
-                  {data.map((v: any) => (
-                    <ListTugas
-                      key={v?.id}
-                      id={v?.tugas_payload.id}
-                      data={v?.tugas_payload}
-                      date={generateDateInfo(v?.tugas_payload.date)}
-                      status={generateDateStatus(v?.tugas_payload.date)}
-                      label={v?.tugas_payload.title}
-                    />
-                  ))}
+                  {data.length > 0
+                    ? data.map((v: any) => (
+                        <ListTugas
+                          key={v?.id}
+                          id={v?.tugas_payload.id}
+                          data={v?.tugas_payload}
+                          date={generateDateInfo(v?.tugas_payload.date)}
+                          status={generateDateStatus(v?.tugas_payload.date)}
+                          label={v?.tugas_payload.title}
+                        />
+                      ))
+                    : ""}
                 </>
               ) : (
                 <>
-                  {data.map((v: any) => (
-                    <ListTugas
-                      key={v?.id}
-                      id={v?.id}
-                      data={v}
-                      date={generateDateInfo(v?.date)}
-                      status={generateDateStatus(v?.date)}
-                      label={v?.title}
-                    />
-                  ))}
+                  {data.length > 0
+                    ? data.map((v: any) => (
+                        <ListTugas
+                          key={v?.id}
+                          id={v?.id}
+                          data={v}
+                          date={generateDateInfo(v?.date)}
+                          status={generateDateStatus(v?.date)}
+                          label={v?.title}
+                        />
+                      ))
+                    : ""}
                 </>
               )}
             </section>

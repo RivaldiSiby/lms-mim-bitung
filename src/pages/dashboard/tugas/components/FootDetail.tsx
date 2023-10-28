@@ -119,11 +119,13 @@ export default function FootDetail({
           <section className="border ">
             <h5 className="font-medium pt-5 pb-5 ">Daftar Pengumpulan Tugas</h5>
             <section>
-              {dataPengajar.map((v: any) => (
-                <>
-                  <ListPengumpulan data={v} status={checkStatus(v)} />
-                </>
-              ))}
+              {dataPengajar.length > 0
+                ? dataPengajar.map((v: any) => (
+                    <>
+                      <ListPengumpulan data={v} status={checkStatus(v)} />
+                    </>
+                  ))
+                : ""}
             </section>
           </section>
         </>

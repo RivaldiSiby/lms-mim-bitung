@@ -8,9 +8,9 @@ export default function ItemInfo({
   icon,
   goto,
 }: {
-  label: string;
+  label: string | any;
   icon: React.ReactNode;
-  goto: string;
+  goto: string | any;
 }) {
   return (
     <Link

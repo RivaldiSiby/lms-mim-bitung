@@ -137,9 +137,11 @@ export default function Siswa() {
             <section className="px-5">
               <TitleHead backto={false} label="Siswa" />
               <section>
-                {data.map((item: any) => (
-                  <ListUser key={item.id} data={item} />
-                ))}
+                {data.length > 0
+                  ? data.map((item: any) => (
+                      <ListUser key={item.id} data={item} />
+                    ))
+                  : ""}
               </section>
             </section>
           </section>

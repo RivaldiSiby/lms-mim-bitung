@@ -3,7 +3,6 @@ import React from "react";
 import { AiOutlineUser } from "react-icons/ai";
 
 export default function ListUser({ data }: { data: any }) {
-  console.log(data);
   return (
     <section className="flex w-full border p-5 rounded-xl mb-5">
       <section

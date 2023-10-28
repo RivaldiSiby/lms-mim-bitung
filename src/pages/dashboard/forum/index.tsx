@@ -69,24 +69,26 @@ export default function Forum() {
             </section>
             <section className="flex-1 lg:max-h-[650px] max-h-[500px] border rounded-xl bg-white shadow  flex flex-col">
               <section className=" p-5 lg:h-[635px] h-[435px] overflow-y-auto">
-                {data.map((v: any) =>
-                  v?.created_by === dataAuth?.data?.user?.name?.id ? (
-                    <>
-                      <ChatSend
-                        msg={v?.text}
-                        date={formatDuration(v?.created_at)}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <ChatBox
-                        name={v?.user_payload?.nama}
-                        msg={v?.text}
-                        date={formatDuration(v?.created_at)}
-                      />
-                    </>
-                  )
-                )}
+                {data.length > 0
+                  ? data.map((v: any) =>
+                      v?.created_by === dataAuth?.data?.user?.name?.id ? (
+                        <>
+                          <ChatSend
+                            msg={v?.text}
+                            date={formatDuration(v?.created_at)}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <ChatBox
+                            name={v?.user_payload?.nama}
+                            msg={v?.text}
+                            date={formatDuration(v?.created_at)}
+                          />
+                        </>
+                      )
+                    )
+                  : ""}
                 <div ref={messagesEndRef} />
               </section>
               <ChatWriter />
