@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 
-export default function HeaderQuiz() {
+export default function HeaderQuizTask({ setAtive }: { setAtive: Function }) {
   const router = useRouter();
   const session: any = useSession();
   return (
@@ -30,13 +30,13 @@ export default function HeaderQuiz() {
           </p>
         </section>
       </section>
-      <section
+      <button
+        onClick={() => setAtive(true)}
         className="border shadow rounded-full px-10 py-2 text-center"
         style={{ color: grayColor }}
       >
-        <p className="sm:text-[12px] text-[10px] font-medium">TIMER</p>
-        <p className="sm:text-[14px] text-[12px] font-bold">00:60:60</p>
-      </section>
+        <p className="sm:text-[12px] text-[10px] font-medium">BUAT SOAL</p>
+      </button>
     </header>
   );
 }

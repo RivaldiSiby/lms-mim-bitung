@@ -10,16 +10,18 @@ export default function ListQuiz({
   status,
   date,
   id,
+  role,
 }: {
   label: string;
   data: any;
   status: number;
   date: string;
   id: string;
+  role: string;
 }) {
   return (
     <Link
-      href={`/dashboard/quiz/exam/${id}`}
+      href={`/dashboard/quiz/${role === "siswa" ? "exam" : "detail"}/${id}`}
       className="w-full h-[70px] border flex items-center px-3 bg-white shadow mb-3"
     >
       <BoxStatus status={status} />

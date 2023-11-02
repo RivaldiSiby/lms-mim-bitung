@@ -19,7 +19,7 @@ export default function ModalWrap({
   return (
     <main
       style={{ display: !show ? "none" : "flex" }}
-      className="absolute font-[Montserrat] z-40 bg-black bg-opacity-50 w-full h-full items-center justify-center"
+      className="fixed font-[Montserrat] z-40 bg-black bg-opacity-50 w-full h-full items-center justify-center"
     >
       <section className="bg-white lg:w-[700px] sm:w-[80%] w-[90%]  p-5 flex items-center ">
         <section className="w-full">

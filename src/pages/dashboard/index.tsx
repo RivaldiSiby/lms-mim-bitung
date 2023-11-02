@@ -89,13 +89,13 @@ export default function Dashboard() {
               <ItemInfo
                 icon={<FaUserFriends />}
                 label="User"
-                count={`${dataUser.length}`}
+                count={`${dataUser?.length}`}
               />
               <ItemInfo icon={<MdQuiz />} label="Quiz" count="30" />
               <ItemInfo
                 icon={<MdMenuBook />}
                 label="Materi"
-                count={`${dataMateri.length}`}
+                count={`${dataMateri?.length}`}
               />
             </section>
           </section>
