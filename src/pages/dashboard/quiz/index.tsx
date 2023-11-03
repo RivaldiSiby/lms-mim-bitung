@@ -58,6 +58,7 @@ export default function Quiz() {
         kode: payload.kode,
         time: payload.time,
         creator: session?.data?.user?.name?.email,
+        start_date_time: "",
         status: "1",
       };
 

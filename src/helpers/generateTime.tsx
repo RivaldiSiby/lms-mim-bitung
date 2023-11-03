@@ -31,3 +31,24 @@ export function formatDuration(time: any) {
 
   return timeUnits.join(", ");
 }
+
+const handlerNum = (n: any) => {
+  return n < 10 ? `0${n}` : `${n}`;
+};
+
+export function formatTimer(start: any, duration: string) {
+  if (start === "") {
+    return "";
+  }
+  const timenow = new Date().getTime();
+  let durationTimeOut = parseInt(duration) * 60000;
+  let timeEnd = start + durationTimeOut;
+  let distance = timeEnd - timenow;
+
+  // Time calculations
+  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  if (distance <= 0) return "waktu habis";
+  return `${handlerNum(hours)}:${handlerNum(minutes)}:${handlerNum(seconds)}`;
+}

@@ -53,3 +53,14 @@ export const getQuiz = async (id: string) => {
     throw error;
   }
 };
+export const updateQuiz = async (id: string, payload: any) => {
+  try {
+    const docRef = doc(firestoreConfig, "quiz", id);
+    const result: any = await setDoc(docRef, payload);
+
+    return;
+  } catch (error) {
+    console.log("error data", error);
+    throw error;
+  }
+};

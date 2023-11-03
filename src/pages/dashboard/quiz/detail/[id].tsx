@@ -5,8 +5,9 @@ import LayoutDas from "@/components/layout/LayoutDas";
 import Loading from "@/components/layout/Loading";
 import NotFound from "@/components/layout/NotFound";
 import RolePengajar from "@/components/layout/RolePengajar";
-import { getQuiz } from "@/firebase/firestore/quiz";
+import { getQuiz, updateQuiz } from "@/firebase/firestore/quiz";
 import { grayColor, primaryColor } from "@/helpers/color";
+import { formatTimer } from "@/helpers/generateTime";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -20,6 +21,7 @@ export default function Detail() {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState<any>(false);
   const session: any = useSession();
+  const [timer, setTimer] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -30,6 +32,45 @@ export default function Detail() {
       }
     })();
   }, [router.query, session]);
+
+  const handlerStartQuiz = async () => {
+    try {
+      setLoading(true);
+      const wrapPayload = data;
+      wrapPayload.status = "2";
+      wrapPayload.start_date_time = new Date().getTime();
+
+      await updateQuiz(router.query?.id, wrapPayload);
+
+      const res = await getQuiz(router.query?.id);
+      if (res === null) setData(null);
+      setData(res);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  const handlerResettQuiz = async () => {
+    try {
+      setLoading(true);
+      const wrapPayload = data;
+      wrapPayload.status = "1";
+      wrapPayload.start_date_time = "";
+
+      await updateQuiz(router.query?.id, wrapPayload);
+
+      const res = await getQuiz(router.query?.id);
+      if (res === null) setData(null);
+      setData(res);
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   const handlerStart = async () => {
     return Swal.fire({
@@ -43,10 +84,33 @@ export default function Detail() {
       confirmButtonText: "Yakin",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Mulai Quiz");
+        handlerStartQuiz();
       }
     });
   };
+  const handlerReset = async () => {
+    return Swal.fire({
+      title: "Apakah anda Yakin ?",
+      text: "Untuk reset waktu quiz",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yakin",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handlerResettQuiz();
+      }
+    });
+  };
+  useEffect(() => {
+    const intervalTimer = setInterval(() => {
+      setTimer(formatTimer(data?.start_date_time, data?.time));
+    }, 1000);
+
+    return () => clearInterval(intervalTimer);
+  });
 
   return (
     <AuthComponent>
@@ -78,7 +142,7 @@ export default function Detail() {
                     Quiz
                   </p>
                   <button
-                    onClick={() => router.push("/dashboard/tugas")}
+                    onClick={() => router.push("/dashboard/quiz")}
                     className="md:text-[30px] text-[25px] border p-2 px-5 rounded-full border-[#7E72F4] "
                     style={{ color: primaryColor }}
                   >
@@ -89,10 +153,10 @@ export default function Detail() {
               <section className="px-5 w-full ">
                 {/* detail quiz */}
                 <section className="w-full h-[70px] border flex items-center px-3 bg-white shadow mb-3">
-                  <BoxStatus status={1} />
+                  <BoxStatus status={parseInt(data?.status)} />
                   <section className="flex-1 mx-5 my-2 border-l-2 px-5 flex flex-col justify-center">
                     <p className="lg:text-[16px] text-[14px] font-bold">
-                      {data?.title}
+                      {data?.title} ( {data?.time} menit)
                     </p>
                     <p
                       className="lg:text-[12px] text-[10px]"
@@ -118,15 +182,32 @@ export default function Detail() {
                       Kelola Soal
                     </p>
                   </Link>
-                  <button
-                    onClick={() => handlerStart()}
-                    style={{ background: primaryColor }}
-                    className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3"
-                  >
-                    <p className="lg:text-[20px] text-[20px] font-bold text-white">
-                      Mulai
-                    </p>
-                  </button>
+                  {timer === "waktu habis" ? (
+                    <button
+                      onClick={() => handlerReset()}
+                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3 bg-red-500"
+                    >
+                      <p className="lg:text-[20px] text-[20px] font-bold text-white">
+                        {data?.start_date_time === "" ? "Mulai" : timer}
+                      </p>
+                    </button>
+                  ) : (
+                    <button
+                      disabled={data?.start_date_time === "" ? false : true}
+                      onClick={() => handlerStart()}
+                      style={{
+                        background:
+                          data?.start_date_time === ""
+                            ? primaryColor
+                            : grayColor,
+                      }}
+                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3"
+                    >
+                      <p className="lg:text-[20px] text-[20px] font-bold text-white">
+                        {data?.start_date_time === "" ? "Mulai" : timer}
+                      </p>
+                    </button>
+                  )}
                 </section>
               </section>
             </section>
