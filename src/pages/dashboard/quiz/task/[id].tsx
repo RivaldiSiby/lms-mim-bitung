@@ -106,8 +106,6 @@ export default function Task() {
     return () => snapshot();
   }, [router]);
 
-  console.log(data);
-
   return (
     <AuthComponent>
       {loading ? <LoadingTransparant /> : null}

@@ -17,7 +17,13 @@ import {
   AiOutlineFieldTime,
 } from "react-icons/ai";
 import InputNum from "@/components/form/InputNum";
-import { addQuiz, quizCollection } from "@/firebase/firestore/quiz";
+import {
+  addQuiz,
+  addQuizJoin,
+  getDataQuizByCode,
+  quizCollection,
+  quizJoinCollection,
+} from "@/firebase/firestore/quiz";
 import Loading from "@/components/layout/Loading";
 import LoadingTransparant from "@/components/layout/LoadingTransparant";
 import { useSession } from "next-auth/react";
@@ -80,6 +86,37 @@ export default function Quiz() {
     }
   };
 
+  const submitJoinQuiz = async () => {
+    try {
+      setErrMsg("");
+      setLoading(true);
+      const res: any = await getDataQuizByCode(code);
+
+      if (!res) {
+        setLoading(false);
+        return setErrMsg("Tugas tidak ditemukan");
+      }
+
+      // join class
+      const payloadData = {
+        Quiz_payload: res,
+        user: session?.data?.user,
+        user_created: session?.data?.user?.name?.id,
+        quiz_created_at: "",
+        score: 0,
+        quiz_id: res.id,
+      };
+
+      await addQuizJoin(payloadData);
+      setCode("");
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      setLoading(false);
+      return setErrMsg(error.message);
+    }
+  };
+
   useEffect(() => {
     const qPengajar = query(
       quizCollection,
@@ -92,18 +129,30 @@ export default function Quiz() {
       ),
       limit(50)
     );
+    const qSiswa = query(
+      quizJoinCollection,
+      where(
+        "user_created",
+        "==",
+        !session?.data?.user?.name?.id ? "" : session?.data?.user?.name?.id
+      ),
+      limit(50)
+    );
 
-    const snapshot = onSnapshot(qPengajar, (res) => {
-      const wrapdata: any = [];
-      res.docs.forEach((doc: any) => {
-        wrapdata.push({ ...doc.data(), id: doc.id });
-      });
-      setData(wrapdata);
-    });
+    const snapshot = onSnapshot(
+      session?.data?.user?.name?.role === "siswa" ? qSiswa : qPengajar,
+      (res) => {
+        const wrapdata: any = [];
+        res.docs.forEach((doc: any) => {
+          wrapdata.push({ ...doc.data(), id: doc.id });
+        });
+        setData(wrapdata);
+      }
+    );
     return () => snapshot();
   }, [session]);
 
-  console.log(data);
+  console.log(code);
 
   return (
     <AuthComponent>
@@ -150,6 +199,7 @@ export default function Quiz() {
           </>
         }
       />
+
       <LayoutDas menuShow={menuShow} setMenuShow={setMenuShow} active="Quiz">
         <section className="w-full h-full ">
           <HeaderDas setMenuShow={setMenuShow} />
@@ -165,16 +215,16 @@ export default function Quiz() {
                 </section>
                 <section className="lg:w-[50%] flex-1 flex items-center  mb-[-1.25rem] lg:mx-5">
                   <InputBox
-                    isPassword
+                    isPassword={false}
                     val={code}
-                    setVal={setCode}
+                    setVal={(val: string) => setCode(val)}
                     placeholder="KODE QUIZ"
                     icon={<MdKey />}
                   />
                 </section>
                 <section className="lg:mb-0 mb-3">
                   <BtnSection
-                    handler={() => console.log("gabung")}
+                    handler={() => submitJoinQuiz()}
                     label="Gabung Quiz"
                   />
                 </section>
@@ -195,20 +245,41 @@ export default function Quiz() {
               Quiz Yang diikuti
             </p>
             <section className="pb-5">
-              {data.length > 0
-                ? data.map((v: any) => (
-                    <>
-                      <ListQuiz
-                        role={session?.data?.user?.name?.role}
-                        id={v?.id}
-                        data={v}
-                        date={v?.desc}
-                        status={parseInt(v?.status)}
-                        label={v?.title}
-                      />
-                    </>
-                  ))
-                : ""}
+              {session?.data?.user?.name?.role === "siswa" ? (
+                <>
+                  {data.length > 0
+                    ? data.map((v: any) => (
+                        <>
+                          <ListQuiz
+                            role={session?.data?.user?.name?.role}
+                            id={v?.Quiz_payload?.id}
+                            data={v?.Quiz_payload}
+                            date={v?.Quiz_payload?.desc}
+                            status={parseInt(v?.Quiz_payload?.status)}
+                            label={v?.Quiz_payload?.title}
+                          />
+                        </>
+                      ))
+                    : ""}
+                </>
+              ) : (
+                <>
+                  {data.length > 0
+                    ? data.map((v: any) => (
+                        <>
+                          <ListQuiz
+                            role={session?.data?.user?.name?.role}
+                            id={v?.id}
+                            data={v}
+                            date={v?.desc}
+                            status={parseInt(v?.status)}
+                            label={v?.title}
+                          />
+                        </>
+                      ))
+                    : ""}
+                </>
+              )}
             </section>
           </section>
         </section>

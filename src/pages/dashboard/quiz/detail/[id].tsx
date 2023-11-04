@@ -185,7 +185,7 @@ export default function Detail() {
                   {timer === "waktu habis" ? (
                     <button
                       onClick={() => handlerReset()}
-                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3 bg-red-500"
+                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3 bg-red-400"
                     >
                       <p className="lg:text-[20px] text-[20px] font-bold text-white">
                         {data?.start_date_time === "" ? "Mulai" : timer}

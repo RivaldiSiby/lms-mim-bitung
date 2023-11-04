@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 
-export default function HeaderQuiz() {
+export default function HeaderQuiz({ timer }: { timer: any }) {
   const router = useRouter();
   const session: any = useSession();
   return (
@@ -31,11 +31,11 @@ export default function HeaderQuiz() {
         </section>
       </section>
       <section
-        className="border shadow rounded-full px-10 py-2 text-center"
+        className="border shadow rounded-full px-5 py-2 text-center"
         style={{ color: grayColor }}
       >
         <p className="sm:text-[12px] text-[10px] font-medium">TIMER</p>
-        <p className="sm:text-[14px] text-[12px] font-bold">00:60:60</p>
+        <p className="sm:text-[14px] text-[12px] font-bold">{timer}</p>
       </section>
     </header>
   );
