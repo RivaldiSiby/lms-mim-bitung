@@ -4,7 +4,7 @@ import AuthComponent from "@/components/layout/AuthComponent";
 import HeaderDas from "@/components/layout/HeaderDas";
 import LayoutDas from "@/components/layout/LayoutDas";
 import { grayColor, primaryColor } from "@/helpers/color";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { MdQuiz, MdKey } from "react-icons/md";
 import HeaderQuiz from "../components/HeaderQuiz";
 import InfoTask from "../components/InfoTask";
@@ -15,12 +15,16 @@ import {
   getQuizJoin,
   quizCollection,
   quizTaskCollection,
+  updateQuizJoin,
 } from "@/firebase/firestore/quiz";
 import { onSnapshot, query, where } from "firebase/firestore";
 import ListPilihan from "../components/ListPilihan";
 import { useSession } from "next-auth/react";
 import { formatTimer } from "@/helpers/generateTime";
 import Swal from "sweetalert2";
+import { answerReducer, ininitalState } from "@/redux/reducer/Answer";
+import ListPilihanQuiz from "../components/ListPilihanQuiz";
+import LoadingTransparant from "@/components/layout/LoadingTransparant";
 
 export default function Exam() {
   const [menuShow, setMenuShow] = useState(false);
@@ -31,6 +35,8 @@ export default function Exam() {
   const [dataJoin, setDataJoin] = useState<any>(false);
   const session: any = useSession();
   const [timer, setTimer] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [todo, dispatch] = useReducer(answerReducer, ininitalState);
 
   useEffect(() => {
     const qPengajar = query(
@@ -48,6 +54,20 @@ export default function Exam() {
     });
     return () => snapshot();
   }, [router]);
+
+  useEffect(() => {
+    (() => {
+      const dataPersist = localStorage.getItem("answerData");
+      if (dataPersist) {
+        dispatch({
+          type: "ADD_DATA",
+          payload: {
+            data: JSON.parse(dataPersist),
+          },
+        });
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const qPengajar = query(quizCollection);
@@ -107,18 +127,84 @@ export default function Exam() {
       confirmButtonText: "Yakin",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("kirim");
+        sumbitDataHandler();
       }
     });
   };
 
-  console.log(dataJoin);
+  const sumbitDataHandler = async () => {
+    try {
+      setLoading(true);
+      let wrapData = 0;
+      dataTask.map((v: any) => {
+        const dataCheckAnswer = todo.data.find((f: any) => f.taskId === v?.id);
+
+        if (dataCheckAnswer) {
+          if (v?.key_option === dataCheckAnswer.answer) wrapData += 1;
+        }
+      });
+
+      console.log(wrapData);
+      let calc = wrapData / dataTask.length;
+      calc = calc * 100;
+
+      const wrapJoin = dataJoin;
+      wrapJoin.score = calc;
+      wrapJoin.quiz_created_at = new Date().getTime();
+      await updateQuizJoin(dataJoin.id, wrapJoin);
+
+      // update data
+      const res = await getQuizJoin(
+        router.query?.id,
+        session?.data?.user?.name?.id
+      );
+      if (res === null) setDataJoin(null);
+      setDataJoin(res);
+
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const choseAnswerHandler = (taskId: string, answerOption: string) => {
+    const wrapData = todo.data;
+    const checkIndex = todo.data.findIndex((f: any) => taskId === f.taskId);
+
+    let wrapPayload = [];
+
+    if (checkIndex === -1) {
+      const item = {
+        taskId: taskId,
+        answer: answerOption,
+      };
+      wrapPayload = [...wrapData, item];
+    } else {
+      wrapData[checkIndex].answer = answerOption;
+      wrapPayload = wrapData;
+    }
+
+    // save to local storage
+    localStorage.setItem("answerData", JSON.stringify(wrapPayload));
+
+    dispatch({
+      type: "ADD_DATA",
+      payload: {
+        data: wrapPayload,
+      },
+    });
+    return;
+  };
 
   return (
     <AuthComponent>
+      {loading ? <LoadingTransparant /> : ""}
       <LayoutDas menuShow={menuShow} setMenuShow={setMenuShow} active="Quiz">
         <section className="w-full h-full pb-5 flex flex-col">
           <HeaderQuiz
+            dataJoin={dataJoin}
             timer={
               data?.start_date_time === ""
                 ? "BELUM MULAI"
@@ -127,7 +213,7 @@ export default function Exam() {
                 : timer
             }
           />
-          {data?.start_date_time === "" ? (
+          {data?.start_date_time === "" && dataJoin?.quiz_created_at === "" ? (
             <section className="mt-5 mr-2">
               {/* info task quiz belum di mulai */}
               <InfoTask
@@ -152,7 +238,7 @@ export default function Exam() {
                   ></p>
                 </section>
 
-                {timer === "waktu habis" ? (
+                {timer === "waktu habis" || dataJoin?.quiz_created_at !== "" ? (
                   <>
                     {/* info task quiz sudah selesai */}
                     <InfoTask
@@ -165,33 +251,52 @@ export default function Exam() {
                 )}
 
                 {/* task quiz info */}
-                {dataTask.length > 0 && timer !== "waktu habis"
+                {dataTask.length > 0 &&
+                timer !== "waktu habis" &&
+                dataJoin?.quiz_created_at === ""
                   ? dataTask.map((v: any, i: number) => (
                       <>
                         <TaskExam
+                          key={v?.id}
                           no={`${i + 1}`}
                           soal={v?.task}
                           option={
                             <>
-                              <ListPilihan
+                              <ListPilihanQuiz
+                                handler={() => choseAnswerHandler(v?.id, "a")}
                                 label="A"
                                 value={v?.option_a}
-                                active={v?.key_option === "a"}
+                                active={
+                                  todo.data?.find((f: any) => f.taskId === v.id)
+                                    ?.answer === "a"
+                                }
                               />
-                              <ListPilihan
+                              <ListPilihanQuiz
+                                handler={() => choseAnswerHandler(v?.id, "b")}
                                 label="B"
                                 value={v?.option_b}
-                                active={v?.key_option === "b"}
+                                active={
+                                  todo.data?.find((f: any) => f.taskId === v.id)
+                                    ?.answer === "b"
+                                }
                               />
-                              <ListPilihan
+                              <ListPilihanQuiz
+                                handler={() => choseAnswerHandler(v?.id, "c")}
                                 label="C"
                                 value={v?.option_c}
-                                active={v?.key_option === "c"}
+                                active={
+                                  todo.data?.find((f: any) => f.taskId === v.id)
+                                    ?.answer === "c"
+                                }
                               />
-                              <ListPilihan
+                              <ListPilihanQuiz
+                                handler={() => choseAnswerHandler(v?.id, "d")}
                                 label="D"
                                 value={v?.option_d}
-                                active={v?.key_option === "d"}
+                                active={
+                                  todo.data?.find((f: any) => f.taskId === v.id)
+                                    ?.answer === "d"
+                                }
                               />
                             </>
                           }
@@ -201,7 +306,11 @@ export default function Exam() {
                   : ""}
 
                 <section className="text-end py-5">
-                  <BtnSection label="KIRIM" handler={() => handlerKirim()} />
+                  {dataJoin?.quiz_created_at === "" ? (
+                    <BtnSection label="KIRIM" handler={() => handlerKirim()} />
+                  ) : (
+                    ""
+                  )}
                 </section>
               </section>
             </>

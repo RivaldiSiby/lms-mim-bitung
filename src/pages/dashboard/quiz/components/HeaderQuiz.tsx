@@ -4,7 +4,13 @@ import { useRouter } from "next/router";
 import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 
-export default function HeaderQuiz({ timer }: { timer: any }) {
+export default function HeaderQuiz({
+  timer,
+  dataJoin,
+}: {
+  timer: any;
+  dataJoin: any;
+}) {
   const router = useRouter();
   const session: any = useSession();
   return (
@@ -35,7 +41,9 @@ export default function HeaderQuiz({ timer }: { timer: any }) {
         style={{ color: grayColor }}
       >
         <p className="sm:text-[12px] text-[10px] font-medium">TIMER</p>
-        <p className="sm:text-[14px] text-[12px] font-bold">{timer}</p>
+        <p className="sm:text-[14px] text-[12px] font-bold">
+          {dataJoin.quiz_created_at === "" ? timer : "SELESAI"}
+        </p>
       </section>
     </header>
   );

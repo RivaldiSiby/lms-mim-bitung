@@ -5,7 +5,11 @@ import LayoutDas from "@/components/layout/LayoutDas";
 import Loading from "@/components/layout/Loading";
 import NotFound from "@/components/layout/NotFound";
 import RolePengajar from "@/components/layout/RolePengajar";
-import { getQuiz, updateQuiz } from "@/firebase/firestore/quiz";
+import {
+  getQuiz,
+  quizJoinCollection,
+  updateQuiz,
+} from "@/firebase/firestore/quiz";
 import { grayColor, primaryColor } from "@/helpers/color";
 import { formatTimer } from "@/helpers/generateTime";
 import { useSession } from "next-auth/react";
@@ -14,12 +18,15 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Swal from "sweetalert2";
+import ListPengumpulanQuiz from "../components/ListPengumpulan";
+import { onSnapshot, query, where } from "firebase/firestore";
 
 export default function Detail() {
   const router: any = useRouter();
   const [menuShow, setMenuShow] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState<any>(false);
+  const [dataList, setDataList] = useState<any>(false);
   const session: any = useSession();
   const [timer, setTimer] = useState("");
 
@@ -32,6 +39,22 @@ export default function Detail() {
       }
     })();
   }, [router.query, session]);
+
+  useEffect(() => {
+    const qPengajar = query(
+      quizJoinCollection
+      // orderBy("created_at", "asc")
+    );
+
+    const snapshot = onSnapshot(qPengajar, (res) => {
+      const wrapdata: any = [];
+      res.docs.forEach((doc: any) => {
+        wrapdata.push({ ...doc.data(), id: doc.id });
+      });
+      setDataList(wrapdata);
+    });
+    return () => snapshot();
+  }, [router]);
 
   const handlerStartQuiz = async () => {
     try {
@@ -115,7 +138,7 @@ export default function Detail() {
   return (
     <AuthComponent>
       <RolePengajar link="/dashboard/quiz">
-        {data === false || isLoading ? (
+        {data === false || isLoading || dataList === false ? (
           <Loading />
         ) : (
           <LayoutDas
@@ -166,7 +189,7 @@ export default function Detail() {
                     </p>
                   </section>
                 </section>
-                <section className="w-full border flex sm:flex-row flex-col">
+                <section className="w-full flex sm:flex-row flex-col">
                   <section className="sm:w-[40%] w-full mr-5 min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3">
                     <h5 className="lg:text-[50px] text-[30px] text-gray-500 text-opacity-30 font-bold">
                       {data?.kode}
@@ -185,7 +208,8 @@ export default function Detail() {
                   {timer === "waktu habis" ? (
                     <button
                       onClick={() => handlerReset()}
-                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3 bg-red-400"
+                      style={{ background: "red" }}
+                      className="sm:w-[30%] w-full  min-h-[70px] border flex flex-col justify-center items-center px-3 bg-white shadow mb-3  p-3 "
                     >
                       <p className="lg:text-[20px] text-[20px] font-bold text-white">
                         {data?.start_date_time === "" ? "Mulai" : timer}
@@ -208,6 +232,19 @@ export default function Detail() {
                       </p>
                     </button>
                   )}
+                </section>
+                <section>
+                  <h4 className="my-5 font-bold " style={{ color: grayColor }}>
+                    Daftar Siswa Mengikuti Quiz
+                  </h4>
+                  {dataList.map((v: any) => (
+                    <>
+                      <ListPengumpulanQuiz
+                        data={v}
+                        status={v?.quiz_created_at === "" ? 1 : 3}
+                      />
+                    </>
+                  ))}
                 </section>
               </section>
             </section>
