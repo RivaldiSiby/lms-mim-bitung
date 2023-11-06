@@ -11,6 +11,7 @@ import {
   AiOutlineEdit,
   AiOutlineFileAdd,
   AiOutlinePlus,
+  AiOutlineSearch,
   AiOutlineUser,
   AiTwotoneEdit,
 } from "react-icons/ai";
@@ -18,16 +19,22 @@ import ModalWrap from "@/components/modal/ModalWrap";
 import InputForm from "@/components/form/InputForm";
 import InputFile from "@/components/form/InputFile";
 import { HandlerFileMateri } from "@/firebase/storage/storage";
-import { addMateri, materiCollection } from "@/firebase/firestore/materi";
+import {
+  addMateri,
+  getDataMateri,
+  materiCollection,
+} from "@/firebase/firestore/materi";
 import LoadingTransparant from "@/components/layout/LoadingTransparant";
 import { limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app } from "@/firebase/config";
+import { orderByChild } from "firebase/database";
 
 export default function Materi() {
   const [menuShow, setMenuShow] = useState(false);
   const [screen, setScreen] = useState<any>(false);
   const [modalShow, setModalShow] = useState(false);
+  const [modalShowSearch, setModalShowSearch] = useState(false);
   const [payload, setPayload] = useState<any>({
     title: "",
     desc: "",
@@ -36,6 +43,7 @@ export default function Materi() {
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [search, setSeacrh] = useState("");
 
   useEffect(() => {
     if (window) {
@@ -76,7 +84,7 @@ export default function Materi() {
   };
 
   useEffect(() => {
-    const q = query(materiCollection, orderBy("created_at", "desc"), limit(50));
+    const q = query(materiCollection, orderBy("created_at", "desc"));
     const snapshot = onSnapshot(q, (res) => {
       const wrapdata: any = [];
       res.docs.forEach((doc: any) => {
@@ -86,6 +94,32 @@ export default function Materi() {
     });
     return () => snapshot();
   }, []);
+
+  const handlerSearch = async () => {
+    try {
+      console.log(search);
+      setLoading(true);
+      const resData: any = await getDataMateri();
+      console.log(resData);
+      const wrap = resData;
+
+      setData(
+        wrap.filter(
+          (f: any) =>
+            f?.title?.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
+            f?.creator?.toLowerCase().indexOf(search.toLowerCase()) !== -1
+        )
+      );
+      setModalShowSearch(false);
+      setSeacrh("");
+      setLoading(false);
+      return;
+    } catch (error: any) {
+      console.log(error);
+      setLoading(false);
+      setErrMsg(error);
+    }
+  };
   return (
     <AuthComponent>
       <ModalWrap
@@ -120,6 +154,26 @@ export default function Materi() {
           </>
         }
       />
+      <ModalWrap
+        show={modalShowSearch}
+        close={() => setModalShowSearch(false)}
+        handler={() => handlerSearch()}
+        title="Cari Materi"
+        component={
+          <>
+            <InputForm
+              isPassword={false}
+              placeholder="Cari Materi berdasarkan judul / pembuat"
+              val={search}
+              setVal={(v: string) => setSeacrh(v)}
+              icon={<AiOutlineSearch />}
+            />
+            <p className="text-[12px] text-red-500 font-[Montserrat]">
+              {errMsg}
+            </p>
+          </>
+        }
+      />
       {loading ? <LoadingTransparant /> : ""}
       <LayoutDas menuShow={menuShow} setMenuShow={setMenuShow} active="Materi">
         <section className="w-full h-full ">
@@ -135,7 +189,7 @@ export default function Materi() {
 
               <section className="w-[110px] flex justify-between">
                 <BtnIcon
-                  handler={() => console.log("gabung")}
+                  handler={() => setModalShowSearch(true)}
                   label={<FaSearch />}
                 />
                 <BtnIcon
@@ -154,7 +208,7 @@ export default function Materi() {
                       label={item?.title}
                     />
                   ))
-                : ""}
+                : "Data Tidak ditemukan..."}
             </section>
           </section>
         </section>
