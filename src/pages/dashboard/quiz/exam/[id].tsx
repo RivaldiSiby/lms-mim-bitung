@@ -151,7 +151,7 @@ export default function Exam() {
       const wrapJoin = dataJoin;
       wrapJoin.score = calc;
       wrapJoin.quiz_created_at = new Date().getTime();
-      await updateQuizJoin(dataJoin.id, wrapJoin);
+      await updateQuizJoin(dataJoin?.id, wrapJoin);
 
       // update data
       const res = await getQuizJoin(

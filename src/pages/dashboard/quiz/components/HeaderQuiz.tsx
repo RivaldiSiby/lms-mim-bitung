@@ -42,7 +42,7 @@ export default function HeaderQuiz({
       >
         <p className="sm:text-[12px] text-[10px] font-medium">TIMER</p>
         <p className="sm:text-[14px] text-[12px] font-bold">
-          {dataJoin.quiz_created_at === "" ? timer : "SELESAI"}
+          {dataJoin?.quiz_created_at === "" ? timer : "SELESAI"}
         </p>
       </section>
     </header>
