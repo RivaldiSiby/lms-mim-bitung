@@ -10,6 +10,7 @@ import {
   MdOutlineAddTask,
   MdOutlineSettings,
 } from "react-icons/md";
+import { useSession } from "next-auth/react";
 
 export default function LayoutDas({
   children,
@@ -22,6 +23,8 @@ export default function LayoutDas({
   menuShow: boolean;
   setMenuShow: Function;
 }) {
+  const session: any = useSession();
+
   return (
     <main
       className="w-full h-[100vh] flex  font-[Montserrat]"
@@ -70,12 +73,16 @@ export default function LayoutDas({
               goto="/dashboard/tugas"
               icon={<MdOutlineAddTask />}
             />
-            <MenuList
-              active={active === "Pengaturan"}
-              label="Pengaturan"
-              goto="/dashboard/pengaturan"
-              icon={<MdOutlineSettings />}
-            />
+            {session?.data?.user?.name?.role === "admin" ? (
+              <MenuList
+                active={active === "Pengaturan"}
+                label="Pengaturan"
+                goto="/dashboard/pengaturan"
+                icon={<MdOutlineSettings />}
+              />
+            ) : (
+              ""
+            )}
           </section>
           <section></section>
         </section>

@@ -91,7 +91,7 @@ export default function FootDetail({
                   : generateNameFile(file?.name)}
               </label>
               <input
-                disabled={data?.tugas_file === "" ? false : true}
+                disabled={!file ? false : true}
                 onChange={(e: any) => setFile(e.target.files[0])}
                 type="file"
                 name=""
