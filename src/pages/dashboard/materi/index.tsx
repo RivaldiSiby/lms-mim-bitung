@@ -29,6 +29,7 @@ import { limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app } from "@/firebase/config";
 import { orderByChild } from "firebase/database";
+import { useSession } from "next-auth/react";
 
 export default function Materi() {
   const [menuShow, setMenuShow] = useState(false);
@@ -44,6 +45,9 @@ export default function Materi() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [search, setSeacrh] = useState("");
+  const session: any = useSession();
+
+  console.log(session);
 
   useEffect(() => {
     if (window) {
@@ -60,7 +64,7 @@ export default function Materi() {
       // send img
       const url = await HandlerFileMateri(payload.file);
 
-      const user = getAuth(app).currentUser;
+      const user = session?.data?.user?.name;
       const payloadData = {
         title: payload.title,
         desc: payload.desc,
@@ -120,6 +124,8 @@ export default function Materi() {
       setErrMsg(error);
     }
   };
+
+  console.log("test data sesi", session?.data?.user?.name);
   return (
     <AuthComponent>
       <ModalWrap
@@ -192,10 +198,14 @@ export default function Materi() {
                   handler={() => setModalShowSearch(true)}
                   label={<FaSearch />}
                 />
-                <BtnIcon
-                  handler={() => setModalShow(true)}
-                  label={<AiOutlinePlus />}
-                />
+                {session?.data?.user?.name?.role === "siswa" ? (
+                  ""
+                ) : (
+                  <BtnIcon
+                    handler={() => setModalShow(true)}
+                    label={<AiOutlinePlus />}
+                  />
+                )}
               </section>
             </section>
             <section className="mt-5 flex-1 pb-5">

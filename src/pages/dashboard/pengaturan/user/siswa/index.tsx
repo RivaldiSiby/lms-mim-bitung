@@ -36,10 +36,13 @@ export default function Siswa() {
         payload.nama === "" ||
         payload.email === "" ||
         payload.password === ""
-      )
+      ) {
+        setLoading(false);
         return setErrMsg("Ada Inputan yang belum di isi");
+      }
 
       if (payload.password.length < 8) {
+        setLoading(false);
         return setErrMsg("Password harus berisi 8 karakter atau lebih");
       }
       // create to auth
