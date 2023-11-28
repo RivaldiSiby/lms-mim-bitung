@@ -69,6 +69,7 @@ export default function Siswa() {
       console.log(error.message);
       setLoading(false);
       const msgErr = error.message.split(" ");
+
       if (msgErr.length >= 3) {
         if (msgErr[2] === "(auth/email-already-in-use).")
           return setErrMsg("Email sudah pernah digunakan");
